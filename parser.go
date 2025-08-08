@@ -1,3 +1,5 @@
+// parser.go
+
 package main
 
 import (
@@ -132,8 +134,12 @@ func (p *Parser) parseBlockquote() (*Blockquote, error) {
 func (p *Parser) parseCodeBlock(language string) (*CodeBlock, error) {
 	var lines []string
 
-	for p.nextLine() {
+	for {
+		if !p.nextLine() {
+			break
+		}
 		if strings.HasPrefix(p.current, "```") {
+			p.nextLine() // advance to line after closing ```
 			break
 		}
 		lines = append(lines, p.current)
@@ -202,9 +208,17 @@ func (p *Parser) parseParagraph() (*Paragraph, error) {
 }
 
 // ParseMarkdown is a convenience function to parse markdown from a reader
-func ParseMarkdown(r io.Reader) (*Document, error) {
+func ParseMarkdown(r io.Reader) (*Document, string, error) {
 	parser := NewParser(r)
-	return parser.ParserDocument()
+	doc, err := parser.ParserDocument()
+	lang := ""
+	for _, blk := range doc.Blocks {
+		if cb, ok := blk.(*CodeBlock); ok && cb.Lang != "" {
+			lang = cb.Lang
+			break
+		}
+	}
+	return doc, lang, err
 }
 
 func (p *Parser) ParserDocument() (*Document, error) {

@@ -1,3 +1,5 @@
+// ast.go
+
 package main
 
 import (
@@ -117,21 +119,29 @@ func (l *List) Render(w io.Writer) error {
 }
 
 func (c *CodeBlock) Render(w io.Writer) error {
+	// Wrap the code block in a container with code-block class
+	io.WriteString(w, `<div class="code-block">`)
+
 	// render highlighted HTML directly
 	if c.IsHighlighted && c.HighlightedHTML != "" {
-		_, err := io.WriteString(w, c.HighlightedHTML+"\n")
-		return err
+		_, err := io.WriteString(w, c.HighlightedHTML)
+		if err != nil {
+			return err
+		}
+	} else {
+		// Fallback if no highlighting available
+		io.WriteString(w, "<pre><code")
+		if c.Lang != "" {
+			io.WriteString(w, ` class="language-`+c.Lang+`"`)
+		}
+
+		io.WriteString(w, ">")
+		io.WriteString(w, html.EscapeString(strings.Join(c.Source, "\n")))
+		io.WriteString(w, "</code></pre>")
 	}
 
-	// Fallback if no highlighting available
-	io.WriteString(w, "<pre><code")
-	if c.Lang != "" {
-		io.WriteString(w, ` class="language-`+c.Lang+`"`)
-	}
-
-	io.WriteString(w, ">")
-	io.WriteString(w, html.EscapeString(strings.Join(c.Source, "\n")))
-	io.WriteString(w, "</code></pre>\n")
+	// Close the wrapper div
+	io.WriteString(w, "</div>\n")
 	return nil
 }
 
