@@ -92,6 +92,14 @@ func parseArgs() *Config {
 		fmt.Println("Usage: md2html <in.md> [out.html] [--title=] [--style=] [--bg-black]")
 		os.Exit(1)
 	}
+	switch args[0] {
+	case "--help", "-h", "help":
+		Help()
+		os.Exit(0)
+	case "--version", "-v", "version":
+		VersionInfo(CurrentVersion)
+		os.Exit(0)
+	}
 	cfg.InputFile = args[0]
 	if len(args) > 1 && !strings.HasPrefix(args[1], "--") {
 		cfg.OutputFile = args[1]
@@ -107,12 +115,6 @@ func parseArgs() *Config {
 			cfg.StyleName = strings.TrimPrefix(arg, "--style=")
 		case arg == "--bg-black":
 			cfg.BlackBackground = true
-		case arg == "--help" || arg == "-h" || arg == "help":
-			Help()
-			os.Exit(1)
-		case arg == "--version" || arg == "-v" || arg == "version":
-			VersionInfo(CurrentVersion)
-			os.Exit(1)
 		}
 	}
 	return cfg

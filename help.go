@@ -48,6 +48,7 @@ func VersionInfo(version string) {
 }
 
 func Help() {
+	// CurrentVersion := "0.0.2"
 	w := tabwriter.NewWriter(os.Stdout, 0, 0, 3, ' ', 0)
 	defer w.Flush()
 
@@ -77,7 +78,8 @@ func Help() {
 	fmt.Fprintf(w, "%s\tmd2html input.md output.html --style=monokai --title='Test Document'%s\n", Yellow, RESET)
 	fmt.Fprintf(w, "%s\tmd2html input.md --title='Test Documen' -bg-black%s\n", Yellow, RESET)
 
-	fmt.Fprintf(w, "%s%sAuthor:%s\t%s%s%sArchit Mishra\n%s", BrightWhite, Bold, RESET, Bold, Italic, BrightCyan, RESET)
+	fmt.Fprintf(w, "\n")
+	fmt.Fprintf(w, "%s%sAuthor:%s%s%s%9sArchit Mishra\n%s", BrightWhite, Bold, RESET, Bold, Italic, BrightCyan, RESET)
 	fmt.Fprintf(w, "%s%sVersion:%s\t%s%s%s%s%s\n", BrightWhite, Bold, RESET, Bold, Italic, BrightCyan, CurrentVersion, RESET)
 
 }
