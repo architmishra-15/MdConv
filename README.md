@@ -19,5 +19,10 @@ This project aims to convert markdown to pdf, going via transitioning to HTML.
     ```bash
     go run . test.md
     ```
+- Run the `help` command to know more about the flags and features -
+    ```bash
+    go run . --help     # or go run . help
+
+    ```
 
 > Todo: Correct the syantax highlighting to make it confide till the code block, and add the final html -> pdf.
